@@ -70,7 +70,8 @@ class Login extends Component {
             </form>
           )}
         {redirect && <Redirect to="/search" />}
-      </div>);
+      </div>
+    );
   }
 }
 
