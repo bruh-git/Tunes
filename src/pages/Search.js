@@ -8,71 +8,101 @@ class Search extends Component {
   constructor() {
     super();
     this.state = {
-      name: '',
       isButtonDisabled: true,
       artistName: '',
-      searchAlbum: [],
+      albumsList: [],
+      artistSearch: '',
       loading: false,
     };
   }
 
-  validate = () => {
-    const { name } = this.state;
-    const minChars = 2;
-    const validation = name.length >= minChars;
-    this.setState({ isButtonDisabled: !validation,
-    });
-  }
+  // validate = () => {
+  //   const { artistName } = this.state;
+  //   const minChars = 2;
+  //   const validation = artistName.length >= minChars;
+  //   this.setState({ isButtonDisabled: !validation,
+  //   });
+  // }
 
   onInputChange = ({ target }) => {
-    const { name, value } = target;
-    this.setState({ [name]: value }, this.validate);
+    const minChars = 2;
+    // const { artistName, value } = target;
+    // this.setState({ [artistName]: value }, this.validate);
+    this.setState({
+      artistName: target.value,
+      isButtonDisabled: target.value.length < minChars,
+    });
   }
 
   handleSearchClick= (event) => {
     event.preventDefault();
-
-    const { searchAlbum, loading } = this.state;
+    const { artistName } = this.state;
+    const currArtistName = artistName;
 
     this.setState({
+      artistName: '',
       loading: true,
     }, async () => {
-      await searchAlbumsAPI({ searchAlbum });
+      const albums = await searchAlbumsAPI(currArtistName);
+
+      this.setState({
+        loading: false,
+        artistSearch: currArtistName,
+        albumsList: albums,
+      });
     });
-    console.log(searchAlbum);
   }
 
   render() {
-    const { isButtonDisabled, loading, artistName } = this.state;
+    const { artistName, isButtonDisabled,
+      loading, albumsList, artistSearch } = this.state;
     return (
       <div data-testid="page-search">
         <Header />
-        <form>
-          <label htmlFor="search-artist-input">
-            <input
-              data-testid="search-artist-input"
-              type="text"
-              name="name"
-              placeholder="Nome do Artista"
-              onChange={ this.onInputChange }
-            />
-          </label>
-          <button
-            id="btn"
-            type="submit"
-            data-testid="search-artist-button"
-            disabled={ isButtonDisabled }
-            onClick={ this.handleSearchClick }
-          >
-            Pesquisar
-          </button>
-          <div>
-            {artistName.map((artist)=> {
-              return <AlbumCard data-testid={`link-to-album-${collectionId}`} />
-            })
-            }
-          </div>
-        </form>
+        <div>
+          {loading
+            ? <Loading />
+            : (
+              <div>
+                <form>
+                  <label htmlFor="search-artist-input">
+                    <input
+                      data-testid="search-artist-input"
+                      type="text"
+                      value={ artistName }
+                      name="name"
+                      placeholder="Nome do Artista"
+                      onChange={ this.onInputChange }
+                    />
+                  </label>
+                  <button
+                    id="btn"
+                    type="submit"
+                    data-testid="search-artist-button"
+                    disabled={ isButtonDisabled }
+                    onClick={ this.handleSearchClick }
+                  >
+                    Pesquisar
+                  </button>
+                </form>
+                {artistSearch && (
+                  <p>{`Resultado de álbuns de: ${artistSearch}`}</p>
+                )}
+                {!albumsList.length
+                  ? <p>Nenhum álbum foi encontrado</p>
+                  : (
+                    <div>
+                      {albumsList.map(
+                        (album) => (<AlbumCard
+                          album={ album }
+                          key={ album.collectionId }
+                        />),
+                      )}
+                    </div>
+                  )}
+              </div>
+            )}
+        </div>
       </div>
     );
   }
