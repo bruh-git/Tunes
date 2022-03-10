@@ -1,7 +1,8 @@
 import React, { Component } from 'react';
 import Header from '../components/Header';
 import searchAlbumsAPI from '../services/searchAlbumsAPI';
-// import Loading from '../components/Loading';
+import Loading from '../components/Loading';
+import AlbumCard from './AlbumCard';
 
 class Search extends Component {
   constructor() {
@@ -9,9 +10,9 @@ class Search extends Component {
     this.state = {
       name: '',
       isButtonDisabled: true,
-      // artistName: '',
+      artistName: '',
       searchAlbum: [],
-      // loading: false,
+      loading: false,
     };
   }
 
@@ -30,16 +31,19 @@ class Search extends Component {
 
   handleSearchClick= (event) => {
     event.preventDefault();
-    const { searchAlbum } = this.state;
+
+    const { searchAlbum, loading } = this.state;
+
     this.setState({
-      // loading: true,
+      loading: true,
     }, async () => {
       await searchAlbumsAPI({ searchAlbum });
     });
+    console.log(searchAlbum);
   }
 
   render() {
-    const { isButtonDisabled } = this.state;
+    const { isButtonDisabled, loading, artistName } = this.state;
     return (
       <div data-testid="page-search">
         <Header />
@@ -62,6 +66,12 @@ class Search extends Component {
           >
             Pesquisar
           </button>
+          <div>
+            {artistName.map((artist)=> {
+              return <AlbumCard data-testid={`link-to-album-${collectionId}`} />
+            })
+            }
+          </div>
         </form>
       </div>
     );
