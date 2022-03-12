@@ -8,13 +8,14 @@ class AlbumCard extends Component {
     const { artworkUrl100, collectionName, artistName, collectionId } = album;
     return (
       <div>
-        <img src={ artworkUrl100 } alt="" />
-        <h3>{ collectionName }</h3>
-        <p>{ artistName }</p>
         <Link
           to={ `/album/${collectionId}` }
           data-testid={ `link-to-album-${collectionId}` }
-        />
+        >
+          <img src={ artworkUrl100 } alt="" />
+          <h3>{ collectionName }</h3>
+          <p>{ artistName }</p>
+        </Link>
       </div>
     );
   }
