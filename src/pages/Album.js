@@ -10,41 +10,67 @@ class Album extends Component {
     super();
     this.state = {
       results: [],
-      loading: true,
+      loading: false,
+      artistName: '',
+      artworkUrl100: '',
+      collectionName: '',
     };
   }
 
-  componentDidMount = () => {
-    this.fetchMusic()
-      .then((response) => this.setState({
-        results: response,
-      }));
-  }
-
-  fetchMusic = async () => {
-    const { match: { params: { id } } } = this.props;
-    const data = await getMusics(id);
+  componentDidMount() {
+    const { match: { params: { id } } } = this.props; // pega todas as props passadas via parametro para o componente album
     this.setState({
-      results: data,
-      loading: false,
+      loading: true,
+    }, async () => {
+      const data = await getMusics(id);
+      const results = data.filter((_song, index) => index !== 0);
+      this.setState({
+        artistName: data[0].artistName,
+        artworkUrl100: data[0].artworkUrl100,
+        collectionName: data[0].collectionName,
+        results,
+        loading: false,
+      });
     });
   }
+  // componentDidMount = () => {
+  //   this.fetchMusic()
+  //     .then((response) => this.setState({
+  //       results: response,
+  //     }));
+  // }
+
+  // fetchMusic = async () => {
+  //   const { match: { params: { id } } } = this.props;
+  //   const data = await getMusics(id);
+  //   this.setState({
+  //     results: data,
+  //     loading: false,
+  //   });
+  // }
 
   render() {
-    const { loading, results } = this.state;
-    console.log(results);
+    const { loading, results, artistName, artworkUrl100, collectionName } = this.state;
     return (
       <div data-testid="page-album">
         <Header />
         {loading
           ? <Loading /> : (
             <div>
-              {results.map(
-                (result) => (<MusicCard
-                  album={ result }
-                  key={ result.collectionId }
-                />),
-              )}
+              <div>
+                <img src={ artworkUrl100 } alt=" " />
+                <h3 data-testid="album-name">{ collectionName }</h3>
+                <p data-testid="artist-name">{ artistName }</p>
+              </div>
+              <div>
+                {results.map(
+                  (result) => (<MusicCard
+                    previewUrl={ result.previewUrl }
+                    trackName={ result.trackName }
+                    key={ result.trackNumber }
+                  />),
+                )}
+              </div>
             </div>
           )}
       </div>
