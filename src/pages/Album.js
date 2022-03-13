@@ -23,12 +23,12 @@ class Album extends Component {
       loading: true,
     }, async () => {
       const data = await getMusics(id);
-      const results = data.filter((_song, index) => index !== 0);
+      const results = data.filter((_song, index) => index !== 0); // filter retorna um novo array, caso irá retornar todos os indices que forem diferentes de 0 do data(que esta recebendo nossa requisição de api)
       this.setState({
-        artistName: data[0].artistName,
+        artistName: data[0].artistName, // atualiza o state com o indice atual do nome do artista
         artworkUrl100: data[0].artworkUrl100,
         collectionName: data[0].collectionName,
-        results,
+        results, // chamo a const que esta recebendo o filter de data
         loading: false,
       });
     });
