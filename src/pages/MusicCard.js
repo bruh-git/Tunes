@@ -23,6 +23,7 @@ class MusicCard extends Component {
       songFavoriteList: songsFavorites,
     });
     const { songFavoriteList } = this.state;
+    console.log(songFavoriteList);
   }
 
   handleFavoriteClick= async () => {

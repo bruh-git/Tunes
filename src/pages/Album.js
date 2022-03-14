@@ -80,6 +80,6 @@ class Album extends Component {
 }
 
 Album.propTypes = {
-  match: PropTypes.objectOf(PropTypes.any).isRequired,
+  match: PropTypes.object.isRequired,
 };
 export default Album;
