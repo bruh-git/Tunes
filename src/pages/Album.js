@@ -19,6 +19,8 @@ class Album extends Component {
 
   componentDidMount() {
     const { match: { params: { id } } } = this.props; // pega todas as props passadas via parametro para o componente album
+    // const { match } = this.props;
+    // const { id } = match.params;
     this.setState({
       loading: true,
     }, async () => {
@@ -80,6 +82,7 @@ class Album extends Component {
 }
 
 Album.propTypes = {
-  match: PropTypes.object.isRequired,
-};
+  match: PropTypes.object,
+}.isRequired;
+
 export default Album;
