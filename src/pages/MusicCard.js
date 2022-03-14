@@ -1,6 +1,6 @@
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
-import { addSong } from '../services/favoriteSongsAPI';
+import { addSong, getFavoriteSongs } from '../services/favoriteSongsAPI';
 import Loading from '../components/Loading';
 
 class MusicCard extends Component {
@@ -8,22 +8,22 @@ class MusicCard extends Component {
     super();
     this.state = {
       loading: false,
+      songFavoriteList: [],
+      // favorite: false,
     };
   }
 
-  // async componentDidMount() {
-  //   await this.getStorage();
-  //   this.setState({
-  //     loading: false,
-  //   });
-  // }
+  componentDidMount() {
+    this.getStorage();
+  }
 
-  // getStorage = async () => {
-  //   const songsFavorites = await getFavoriteSongs();
-  //   this.setState({
-  //     checked: songsFavorites,
-  //   });
-  // }
+  getStorage = async () => {
+    const songsFavorites = await getFavoriteSongs();
+    this.setState({
+      songFavoriteList: songsFavorites,
+    });
+    const { songFavoriteList } = this.state;
+  }
 
   handleFavoriteClick= async () => {
     this.setState({
@@ -41,7 +41,7 @@ class MusicCard extends Component {
 
   render() {
     const { trackName, previewUrl, trackId } = this.props;
-    const { loading } = this.state;
+    const { loading, songsFavorites } = this.state;
     return (
       <div>
         <h1>{trackName}</h1>
@@ -59,6 +59,7 @@ class MusicCard extends Component {
               type="checkbox"
               id={ `check-${trackId}` }
               onClick={ this.handleFavoriteClick }
+              checked={ songsFavorites }
             />
           </label>
           {/* Enquanto aguarda o retorno da função addSong,renderize a   mensagem de Carregando */}
