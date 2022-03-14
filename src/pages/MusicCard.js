@@ -9,7 +9,7 @@ class MusicCard extends Component {
     this.state = {
       loading: false,
       songFavoriteList: [],
-      favorite: false,
+      // favorite: false,
     };
   }
 
@@ -18,14 +18,15 @@ class MusicCard extends Component {
   }
 
   getStorage = async () => {
-    const { trackId } = this.props;
+    // const { trackId } = this.props;
     const songsFavorites = await getFavoriteSongs();
     this.setState({
       songFavoriteList: songsFavorites,
     });
     const { songFavoriteList } = this.state;
-    songFavoriteList.map((el) => (el.trackId === trackId
-      ? this.setState({ favorite: true }) : false));
+    console.log(songFavoriteList);
+    // songFavoriteList.map((el) => (el.trackId === trackId
+    //   ? this.setState({ favorite: true }) : false));
   }
 
   handleFavoriteClick= async () => {
@@ -44,7 +45,7 @@ class MusicCard extends Component {
 
   render() {
     const { trackName, previewUrl, trackId } = this.props;
-    const { loading, favorite } = this.state;
+    const { loading, songsFavorites } = this.state;
     return (
       <div>
         <h1>{trackName}</h1>
@@ -62,7 +63,7 @@ class MusicCard extends Component {
               type="checkbox"
               id={ `check-${trackId}` }
               onChange={ this.handleFavoriteClick }
-              checked={ favorite }
+              checked={ songsFavorites }
             />
           </label>
           {/* Enquanto aguarda o retorno da função addSong,renderize a   mensagem de Carregando */}
