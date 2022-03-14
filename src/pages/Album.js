@@ -64,10 +64,10 @@ class Album extends Component {
               </div>
               <div>
                 {results.map(
-                  (result) => (<MusicCard
+                  (result, index) => (<MusicCard
                     previewUrl={ result.previewUrl }
                     trackName={ result.trackName }
-                    key={ result.trackNumber }
+                    key={ index }
                     trackId={ result.trackId }
                   />),
                 )}
